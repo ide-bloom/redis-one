@@ -7,6 +7,10 @@ standard library and asyncio. It speaks RESP2, so Redis-compatible clients can
 use the commands implemented so far without a custom protocol adapter. This is
 an educational, incremental project, not a production Redis replacement.
 
+![A redis-cli session running PING, SET, INCR and GET against Redis One](docs/redis-one-demo.gif)
+
+*Rendered from a real terminal session using redis-cli.*
+
 ## Quick start
 
 Requires Python 3.11 or newer.
