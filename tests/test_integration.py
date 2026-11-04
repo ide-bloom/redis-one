@@ -93,8 +93,14 @@ class TCPTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.sleep(0)
 
     async def test_server_close_disconnects_idle_clients(self) -> None:
-        await self.server.close()
+        await asyncio.wait_for(self.server.close(), 2)
         self.assertEqual(await asyncio.wait_for(self.reader.read(), 2), b"")
+
+    async def test_serve_forever_returns_after_close(self) -> None:
+        serving = asyncio.create_task(self.server.serve_forever())
+        await asyncio.sleep(0)
+        await asyncio.wait_for(self.server.close(), 2)
+        await asyncio.wait_for(serving, 2)
 
 
 class ShutdownTests(unittest.IsolatedAsyncioTestCase):
