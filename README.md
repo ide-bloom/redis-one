@@ -54,6 +54,17 @@ milestones. There are no input-size or connection limits yet, so run this only
 on a trusted network. Malformed protocol input receives an error and the
 connection is closed because the stream cannot be safely resynchronized.
 
+## Roadmap
+
+- [x] RESP2 parser and asyncio TCP server
+- [x] String and keyspace commands
+- [ ] TTL commands and active expiry
+- [ ] Lists, hashes, sets, and sorted sets
+- [ ] Transactions and pub/sub
+- [ ] AOF and snapshot persistence
+- [ ] Server configuration and resource limits
+- [ ] Compatibility testing, benchmarks, and design documentation
+
 ## License
 
 [MIT](LICENSE)
