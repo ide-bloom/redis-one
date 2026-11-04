@@ -29,11 +29,13 @@ class RedisOneServer:
         self.store = Store()
         self.registry = create_registry()
         self._server: asyncio.Server | None = None
+        self._stopped = asyncio.Event()
         self._clients: set[asyncio.StreamWriter] = set()
         self._tasks: set[asyncio.Task[None]] = set()
 
     async def start(self) -> None:
         self._server = await asyncio.start_server(self._handle_client, self.config.host, self.config.port)
+        self._stopped.clear()
 
     @property
     def address(self) -> tuple[str, int]:
@@ -45,17 +47,23 @@ class RedisOneServer:
     async def serve_forever(self) -> None:
         if self._server is None:
             raise RuntimeError("server is not running")
-        await self._server.serve_forever()
+        # asyncio.Server.serve_forever() waits for active connections when
+        # cancelled on Python 3.12, before our cleanup can close those clients.
+        await self._stopped.wait()
 
     async def close(self) -> None:
-        if self._server is not None:
-            self._server.close()
-            await self._server.wait_closed()
+        server = self._server
+        if server is not None:
+            server.close()
             self._server = None
+        # Python 3.12+ waits for connections too, so close clients first.
         for writer in tuple(self._clients):
             writer.close()
         if self._tasks:
             await asyncio.gather(*tuple(self._tasks), return_exceptions=True)
+        if server is not None:
+            await server.wait_closed()
+        self._stopped.set()
 
     async def _handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
         task = asyncio.current_task()
