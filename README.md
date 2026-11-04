@@ -53,3 +53,7 @@ persistence, additional data structures, and transactions are future
 milestones. There are no input-size or connection limits yet, so run this only
 on a trusted network. Malformed protocol input receives an error and the
 connection is closed because the stream cannot be safely resynchronized.
+
+## License
+
+[MIT](LICENSE)
