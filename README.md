@@ -1,5 +1,7 @@
 # Redis One
 
+[![Tests](https://github.com/ide-bloom/redis-one/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/ide-bloom/redis-one/actions/workflows/tests.yml)
+
 Redis One is an in-memory key-value server built from scratch with Python's
 standard library and asyncio. It speaks RESP2, so Redis-compatible clients can
 use the commands implemented so far without a custom protocol adapter. This is
